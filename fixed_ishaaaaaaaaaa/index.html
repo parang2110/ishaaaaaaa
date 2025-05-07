@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Marry Me?</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            touch-action: manipulation;
+        }
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #ffebee;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        h1 {
+            color: #e91e63;
+            font-size: clamp(1.8em, 6vw, 2.5em);
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            position: relative;
+            min-height: 120px;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 150px;
+            z-index: 2;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #yes {
+            background-color: #4caf50;
+            color: white;
+        }
+        #no {
+            background-color: #f44336;
+            color: white;
+            position: relative;
+        }
+        #yes:active {
+            background-color: #388e3c;
+            transform: scale(1.1);
+        }
+        .hearts {
+            font-size: clamp(1.5em, 5vw, 2em);
+            color: #e91e63;
+            margin: 15px 0;
+        }
+        .hidden {
+            display: none;
+        }
+        #response {
+            font-size: clamp(1.5em, 5vw, 2em);
+            color: #e91e63;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .cry-emoji {
+            position: absolute;
+            font-size: 2.5em;
+            animation: fadeUp 1.5s forwards;
+            pointer-events: none;
+            z-index: 10;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+        .rose {
+            position: fixed;
+            font-size: 2em;
+            animation: floatUp 4s linear forwards;
+            pointer-events: none;
+            z-index: 0;
+            bottom: -50px;
+        }
+        @keyframes floatUp {
+            0% { 
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% { 
+                opacity: 0;
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+        @media (min-width: 600px) {
+            .buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+            button {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hearts">❤️ ❤️ ❤️</div>
+        <h1>Will You Marry Me?</h1>
+        <div class="hearts">❤️ ❤️ ❤️</div>
+        
+        <div class="buttons" id="buttonsContainer">
+            <button id="yes">YES!</button>
+            <button id="no">NO</button>
+        </div>
+        
+        <div id="response" class="hidden">
+            I love you puraaaaaaa mero baby 💍💕
+        </div>
+    </div>
+
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            const yesButton = document.getElementById('yes');
+            const noButton = document.getElementById('no');
+            const response = document.getElementById('response');
+            const buttonsContainer = document.getElementById('buttonsContainer');
+            let clickCount = 0;
+            let roseInterval;
+            
+            // Improved touch event handling
+            yesButton.addEventListener('click', handleYes);
+            noButton.addEventListener('click', handleNo);
+            
+            function handleYes(e) {
+                e.preventDefault();
+                buttonsContainer.classList.add('hidden');
+                response.classList.remove('hidden');
+                
+                // Stop any existing rose animation
+                if (roseInterval) clearInterval(roseInterval);
+                
+                // Create floating roses
+                roseInterval = setInterval(() => {
+                    createRose();
+                }, 300);
+                
+                setTimeout(() => {
+                    clearInterval(roseInterval);
+                }, 5000);
+            }
+            
+            function createRose() {
+                const rose = document.createElement('div');
+                rose.className = 'rose';
+                rose.textContent = '🌹';
+                rose.style.left = Math.random() * 100 + 'vw';
+                document.body.appendChild(rose);
+                
+                setTimeout(() => {
+                    rose.remove();
+                }, 4000);
+            }
+            
+            function handleNo(e) {
+                e.preventDefault();
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                
+                // Create dramatic crying emoji
+                const cryEmoji = document.createElement('div');
+                cryEmoji.className = 'cry-emoji';
+                cryEmoji.textContent = '😭';
+                cryEmoji.style.left = (clientX - 20) + 'px';
+                cryEmoji.style.top = (clientY - 40) + 'px';
+                document.body.appendChild(cryEmoji);
+                
+                // Remove emoji after animation
+                setTimeout(() => {
+                    cryEmoji.remove();
+                }, 1500);
+                
+                // Make the button jump away (with boundaries)
+                const containerRect = buttonsContainer.getBoundingClientRect();
+                const buttonRect = noButton.getBoundingClientRect();
+                
+                const maxX = containerRect.width - buttonRect.width - 20;
+                const maxY = containerRect.height - buttonRect.height - 20;
+                
+                const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+                const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+                
+                noButton.style.position = 'absolute';
+                noButton.style.left = randomX + 'px';
+                noButton.style.top = randomY + 'px';
+                
+                // Make the button bigger each time it's clicked
+                clickCount++;
+                const sizeIncrease = 1 + (clickCount * 0.1);
+                noButton.style.transform = `scale(${sizeIncrease})`;
+                
+                // Change text after several attempts
+                if (clickCount === 3) {
+                    noButton.textContent = "Please?";
+                } else if (clickCount === 5) {
+                    noButton.textContent = "Don't say no!";
+                } else if (clickCount === 8) {
+                    noButton.textContent = "I'll cry! 😭";
+                } else if (clickCount === 10) {
+                    noButton.textContent = "Okay, I give up 😢";
+                    noButton.style.transform = 'scale(1)';
+                    noButton.style.position = 'static';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
